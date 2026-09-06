@@ -14,7 +14,7 @@ class TestUserRole(TransactionCase):
         super().setUpClass()
         # Group definitions are cached in the registry; other modules' tests
         # may have created and rolled back groups/roles before this class.
-        cls.env.registry.clear_cache()
+        cls.env.registry.clear_all_caches()
         cls.env = cls.env(
             context=dict(cls.env.context, tracking_disable=True, no_reset_password=True)
         )
