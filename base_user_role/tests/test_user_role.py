@@ -101,7 +101,13 @@ class TestUserRole(TransactionCase):
             f"role_group={role.group_id.id} role_all={sorted(role.all_implied_ids.ids)} "
             f"user_groups={sorted(user.group_ids.ids)} user_all={sorted(user.all_group_ids.ids)} "
             f"env_uid={self.env.uid} su={self.env.su} "
-            f"default_role_lines={type(user)._default_role_lines(user)}"
+            f"default_role_lines={type(user)._default_role_lines(user)} "
+            f"registry_id={id(self.env.registry)} loaded={self.env.registry.loaded} "
+            f"ready={self.env.registry.ready} n_init_modules={len(self.env.registry._init_modules)} "
+            f"hr_in_init={'hr' in self.env.registry._init_modules} "
+            f"bur_in_init={'base_user_role' in self.env.registry._init_modules} "
+            f"bases={[c.__module__ for c in type(user).__bases__][:6]} "
+            f"registries={[(k, id(v)) for k, v in type(self.env.registry).registries.items()]}"
         )
 
     def test_role_1(self):
