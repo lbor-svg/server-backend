@@ -23,7 +23,7 @@ class ResUsers(models.Model):
 
     user_role_ids = fields.One2many(
         comodel_name="res.users.role",
-        string="Roles",
+        string="User roles",
         compute="_compute_user_role_ids",
         compute_sudo=True,
         groups="base.group_erp_manager",
