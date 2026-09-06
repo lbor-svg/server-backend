@@ -90,35 +90,13 @@ class TestUserRole(TransactionCase):
             }
         )
 
-    def _diag(self, user, role):
-        """Diagnostic context for order-dependent failures (temporary)."""
-        write = type(user).write
-        return (
-            f"lines={user.role_line_ids.read(['role_id', 'is_enabled', 'date_from', 'date_to'])} "
-            f"enabled={user._get_enabled_roles().ids} "
-            f"write={getattr(write, '__module__', '?')}.{getattr(write, '__qualname__', '?')} "
-            f"patched={hasattr(write, 'origin')} "
-            f"role_group={role.group_id.id} role_all={sorted(role.all_implied_ids.ids)} "
-            f"user_groups={sorted(user.group_ids.ids)} user_all={sorted(user.all_group_ids.ids)} "
-            f"env_uid={self.env.uid} su={self.env.su} "
-            f"default_role_lines={type(user)._default_role_lines(user)} "
-            f"registry_id={id(self.env.registry)} loaded={self.env.registry.loaded} "
-            f"ready={self.env.registry.ready} n_init_modules={len(self.env.registry._init_modules)} "
-            f"hr_in_init={'hr' in self.env.registry._init_modules} "
-            f"bur_in_init={'base_user_role' in self.env.registry._init_modules} "
-            f"bases={[c.__module__ for c in type(user).__bases__][:6]} "
-            f"registries={[(k, id(v)) for k, v in type(self.env.registry).registries.items()]}"
-        )
-
     def test_role_1(self):
         self.user_id.write(
             {"role_line_ids": [fields.Command.create({"role_id": self.role1_id.id})]}
         )
         user_group_ids = sorted({group.id for group in self.user_id.group_ids})
         role_group_ids = sorted(set(self.role1_id.all_implied_ids.ids))
-        self.assertEqual(
-            user_group_ids, role_group_ids, self._diag(self.user_id, self.role1_id)
-        )
+        self.assertEqual(user_group_ids, role_group_ids)
 
     def test_role_2(self):
         self.user_id.write(
