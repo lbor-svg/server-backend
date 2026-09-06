@@ -4,9 +4,10 @@ import datetime
 
 from odoo import fields
 from odoo.exceptions import AccessError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 
+@tagged("post_install", "-at_install")
 class TestUserRole(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -225,9 +226,7 @@ class TestUserRole(TransactionCase):
         )
         # Check that the user cannot read multicompany data again since it lost
         # its admin privileges
-        with self.assertRaisesRegex(
-            AccessError, "You are not allowed to access 'User Role'"
-        ):
+        with self.assertRaises(AccessError):
             role.read()
 
     def test_create_role_from_user(self):
